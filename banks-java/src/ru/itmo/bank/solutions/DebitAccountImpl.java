@@ -1,21 +1,21 @@
-package com.mycompany.banks.solutions;
+package ru.itmo.bank.solutions;
 
-import com.mycompany.banks.interfaces.IAccount;
-import com.mycompany.banks.models.Bank;
-import com.mycompany.banks.models.Client;
+import ru.itmo.bank.interfaces.Account;
+import ru.itmo.bank.models.Bank;
+import ru.itmo.bank.models.Client;
 
-public class DebitAccount implements IAccount {
-    private final Client _client;
-    private final Bank _bank;
+public class DebitAccountImpl implements Account {
+
+    private String _name = "debit";
+    private Client _client;
+    private Bank _bank;
     private int _days = 1;
     private float _monthlyPercentage;
     private float _capital;
-    private final int _id;
+    private int _id;
 
-    public DebitAccount(float capital, int id, float monthlyPercentage, Bank bank, Client client)
-    {
-        if (monthlyPercentage <= 0 || monthlyPercentage > 1)
-        {
+    public DebitAccountImpl(float capital, int id, float monthlyPercentage, Bank bank, Client client) {
+        if (monthlyPercentage <= 0 || monthlyPercentage > 1) {
             throw new RuntimeException("Incorrect monthly percentage");
         }
 
@@ -26,8 +26,7 @@ public class DebitAccount implements IAccount {
         _bank = bank;
     }
 
-    public void setMonthlyPercentage(float monthlyPercentage)
-    {
+    public void setMonthlyPercentage(float monthlyPercentage) {
         _monthlyPercentage = monthlyPercentage;
     }
 
@@ -38,8 +37,7 @@ public class DebitAccount implements IAccount {
 
     @Override
     public void withdrawMoney(float money) {
-        if (money > _bank.getLimit() && _bank.getLimit() != -1 && !_client.trustStatus())
-        {
+        if (money > _bank.getLimit() && _bank.getLimit() != -1 && !_client.trustStatus()) {
             throw new RuntimeException(
                     "You are not trust client, and u can't do it, please set passport and address");
         }
@@ -49,8 +47,7 @@ public class DebitAccount implements IAccount {
 
     @Override
     public void addDays(int days) {
-        for (int i = 0; i < days; i++)
-        {
+        for (int i = 0; i < days; i++) {
             addDay();
         }
     }
@@ -72,7 +69,7 @@ public class DebitAccount implements IAccount {
 
     @Override
     public String getName() {
-        return "debit";
+        return _name;
     }
 
     @Override
@@ -100,11 +97,9 @@ public class DebitAccount implements IAccount {
         return _monthlyPercentage;
     }
 
-    private void addDay()
-    {
+    private void addDay() {
         _days += 1;
-        if (_days % 30 == 0)
-        {
+        if (_days % 30 == 0) {
             addMoney(_capital * _monthlyPercentage);
         }
     }

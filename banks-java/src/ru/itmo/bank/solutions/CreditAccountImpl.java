@@ -1,19 +1,20 @@
-package com.mycompany.banks.solutions;
+package ru.itmo.bank.solutions;
 
-import com.mycompany.banks.interfaces.IAccount;
+import ru.itmo.bank.interfaces.Account;
+import ru.itmo.bank.tools.BanksException;
 
-public class CreditAccount implements IAccount {
+public class CreditAccountImpl implements Account {
 
+    private String _name = "Credit";
     private int _days = 1;
-    private final float _monthlyMinusSum;
+    private float _monthlyMinusSum;
     private float _capital;
     private final float _freeSum;
-    private final float _minMoney;
-    private final float _maxMoney;
-    private final int _id;
+    private float _minMoney;
+    private float _maxMoney;
+    private int _id;
 
-    public CreditAccount(float capital, float minMoney, float maxMoney, int id, float monthlyMinusSum)
-    {
+    public CreditAccountImpl(float capital, float minMoney, float maxMoney, int id, float monthlyMinusSum) {
         _capital = capital;
         _freeSum = _capital;
         _minMoney = minMoney;
@@ -34,10 +35,9 @@ public class CreditAccount implements IAccount {
     }
 
     @Override
-    public void withdrawMoney(float money) {
-        if (_capital < _minMoney)
-        {
-            throw new RuntimeException("U can't do it couse min limit");
+    public void withdrawMoney(float money) throws BanksException {
+        if (_capital < _minMoney) {
+            throw new BanksException("U can't do it couse min limit");
         }
 
         _capital -= money;
@@ -45,8 +45,7 @@ public class CreditAccount implements IAccount {
 
     @Override
     public void addDays(int days) {
-        for (int i = 0; i < days; i++)
-        {
+        for (int i = 0; i < days; i++) {
             addDay();
         }
     }
@@ -63,7 +62,7 @@ public class CreditAccount implements IAccount {
 
     @Override
     public String getName() {
-        return "Credit";
+        return _name;
     }
 
     @Override
@@ -91,11 +90,9 @@ public class CreditAccount implements IAccount {
         return 0;
     }
 
-    private void addDay()
-    {
+    private void addDay() {
         _days += 1;
-        if (_days % 30 == 0)
-        {
+        if (_days % 30 == 0) {
             _capital -= _monthlyMinusSum;
         }
     }

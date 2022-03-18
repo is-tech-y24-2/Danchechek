@@ -1,9 +1,11 @@
-package com.mycompany.banks.solutions;
+package ru.itmo.bank.solutions;
 
-import com.mycompany.banks.interfaces.IAccount;
+import ru.itmo.bank.interfaces.Account;
+import ru.itmo.bank.tools.BanksException;
 
-public class DepositAccount implements IAccount {
+public class DepositAccountImpl implements Account {
 
+    private String _name = "deposit";
     private int _period;
     private int _id;
     private float _percentage;
@@ -12,8 +14,7 @@ public class DepositAccount implements IAccount {
     private int _days = 0;
     private float _capital;
 
-    public DepositAccount(float minMoney, float maxMoney, int period, float capital, int id, float percentage)
-    {
+    public DepositAccountImpl(float minMoney, float maxMoney, int period, float capital, int id, float percentage) {
         _capital = capital;
         _id = id;
         _percentage = percentage;
@@ -33,10 +34,9 @@ public class DepositAccount implements IAccount {
     }
 
     @Override
-    public void withdrawMoney(float money) {
-        if (_days < _period)
-        {
-            throw new RuntimeException("Period is not ended");
+    public void withdrawMoney(float money) throws BanksException {
+        if (_days < _period) {
+            throw new BanksException("Period is not ended");
         }
 
         _capital -= money;
@@ -44,8 +44,7 @@ public class DepositAccount implements IAccount {
 
     @Override
     public void addDays(int days) {
-        for (int i = 0; i < days; i++)
-        {
+        for (int i = 0; i < days; i++) {
             addDay();
         }
     }
@@ -62,7 +61,7 @@ public class DepositAccount implements IAccount {
 
     @Override
     public String getName() {
-        return "deposit";
+        return _name;
     }
 
     @Override
@@ -90,11 +89,9 @@ public class DepositAccount implements IAccount {
         return _percentage;
     }
 
-    private void addDay()
-    {
+    private void addDay() {
         _days += 1;
-        if (_days % _period == 0)
-        {
+        if (_days % _period == 0) {
             _capital += _capital * _percentage;
         }
     }

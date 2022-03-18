@@ -1,17 +1,17 @@
-package com.mycompany.banks.tests;
+package tests;
 
-import com.mycompany.banks.models.Bank;
-import com.mycompany.banks.models.Client;
-import com.mycompany.banks.models.MainBank;
+import ru.itmo.bank.models.Bank;
+import ru.itmo.bank.models.Client;
+import ru.itmo.bank.models.MainBank;
 import org.junit.jupiter.api.*;
+import ru.itmo.bank.tools.BanksException;
 
 public class BankTest {
     private MainBank _mainBank;
     private Bank _tinkoff;
 
     @BeforeEach
-    private void reset()
-    {
+    private void reset() throws BanksException {
 
         _mainBank = new MainBank();
         _tinkoff = _mainBank.addBank("Tinkoff");
@@ -19,8 +19,7 @@ public class BankTest {
 
 
     @Test
-    public void addDebitAccount()
-    {
+    public void addDebitAccount() throws BanksException {
         _mainBank.getBank("Tinkoff").setPercentForDebit(0.2f);
         Client dan = _mainBank.registration("Dan", "Shevchuk", "Fedora Abramova 4", 401544544);
         String password = "12345678";
@@ -33,8 +32,7 @@ public class BankTest {
     }
 
     @Test
-    public void addCreditAccount()
-    {
+    public void addCreditAccount() throws BanksException {
         _mainBank.addCreditAccountConditions(0, 1000, 100, _tinkoff.getName());
         Client dan = _mainBank.registration("Dan", "Shevchuk", "Fedora Abramova 4", 401544544);
         String password = "12345678";
@@ -47,8 +45,7 @@ public class BankTest {
     }
 
     @Test
-    public void addDepositAccount()
-    {
+    public void addDepositAccount() throws BanksException {
         _mainBank.addDepositAccountConditions(0, 1000, 366, 0.06f, _tinkoff.getName());
         Client dan = _mainBank.registration("Dan", "Shevchuk", "Fedora Abramova 4", 401544544);
         String password = "12345678";
@@ -61,8 +58,7 @@ public class BankTest {
     }
 
     @Test
-    public void doTransfer()
-    {
+    public void doTransfer() throws BanksException {
         _mainBank.setPercentForDebitToBank(0.4f, _tinkoff.getName());
         Client dan = _mainBank.registration("Dan", "Shevchuk", "Fedora Abramova 4", 401544544);
         Client nekit = _mainBank.registration("Nekit", "Yusupov", "Fedora Abramova 4", 401124553);
@@ -81,8 +77,7 @@ public class BankTest {
     }
 
     @Test
-    public void cancelingTransaction()
-    {
+    public void cancelingTransaction() throws BanksException {
         _mainBank.setPercentForDebitToBank(0.4f, _tinkoff.getName());
         Client dan = _mainBank.registration("Dan", "Shevchuk", "Fedora Abramova 4", 401544544);
         Client nekit = _mainBank.registration("Nekit", "Yusupov", "Fedora Abramova 4", 401124553);

@@ -1,8 +1,9 @@
-package com.mycompany.banks;
+package ru.itmo.bank;
 
-import com.mycompany.banks.interfaces.IAccount;
-import com.mycompany.banks.models.Client;
-import com.mycompany.banks.models.MainBank;
+import ru.itmo.bank.interfaces.Account;
+import ru.itmo.bank.models.Client;
+import ru.itmo.bank.models.MainBank;
+import ru.itmo.bank.tools.BanksException;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,73 +12,63 @@ import java.util.Scanner;
 public class InterfaceBank {
     static Scanner s = new Scanner(System.in);
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws BanksException {
         var mainBank = new MainBank();
         begin(mainBank);
     }
 
-    private static void begin(MainBank bank) {
+    private static void begin(MainBank bank) throws BanksException {
         System.out.println(("Хай, это банковская система, с какой стороны ты хотел бы зайти?\n"));
         System.out.println("1 - как клиент");
         System.out.println("2 - как владелец банка");
         System.out.println("3 - добавить дни");
         String choose = s.nextLine();
 
-        if (!Objects.equals(choose, "1") && !Objects.equals(choose, "2") && !Objects.equals(choose, "3"))
-        {
+        if (!Objects.equals(choose, "1") && !Objects.equals(choose, "2") && !Objects.equals(choose, "3")) {
             System.out.println("Нет такой цифры");
             begin(bank);
         }
 
-        if (Objects.equals(choose, "1"))
-        {
+        if (Objects.equals(choose, "1")) {
             System.out.println("Вы зарегестрированы или еще не имеете акаунт?\n");
             System.out.println("1 - не зарегестрирован");
             System.out.println("2 - зарегестрирован");
 
             String registration = s.nextLine();
-            if (!Objects.equals(registration, "1") && !Objects.equals(registration, "2"))
-            {
+            if (!Objects.equals(registration, "1") && !Objects.equals(registration, "2")) {
                 System.out.println("Нет такой цифры");
                 begin(bank);
             }
 
-            if (Objects.equals(registration, "1"))
-            {
+            if (Objects.equals(registration, "1")) {
                 registrationClient(bank);
             }
 
-            if (Objects.equals(registration, "2"))
-            {
+            if (Objects.equals(registration, "2")) {
                 loginClient(bank);
             }
         }
 
-        if (Objects.equals(choose, "2"))
-        {
+        if (Objects.equals(choose, "2")) {
             System.out.println("Вы хотите зарегестрировать новый банк или управлять существующим?");
             System.out.println("1 - зарегестрировать");
             System.out.println("2 - управлять существующим");
             String registration = s.nextLine();
-            if (!Objects.equals(registration, "1") && !Objects.equals(registration, "2"))
-            {
+            if (!Objects.equals(registration, "1") && !Objects.equals(registration, "2")) {
                 System.out.println("Нет такой цифры");
                 begin(bank);
             }
 
-            if (Objects.equals(registration, "1"))
-            {
+            if (Objects.equals(registration, "1")) {
                 bankRegistration(bank);
             }
 
-            if (Objects.equals(registration, "2"))
-            {
+            if (Objects.equals(registration, "2")) {
                 bankManagement(bank);
             }
         }
 
-        if (Objects.equals(choose, "3"))
-        {
+        if (Objects.equals(choose, "3")) {
             System.out.println("Введите дни");
             int days = s.nextInt();
             bank.addDays(days);
@@ -85,17 +76,14 @@ public class InterfaceBank {
         }
     }
 
-    private static <Bank> void bankManagement(MainBank bank)
-    {
+    private static <Bank> void bankManagement(MainBank bank) throws BanksException {
         System.out.println("Выберите банк, в которым хотите управлять или ноль, чтобы вернуться в начало");
-        for (int i = 0; i < bank.getBanks().size(); i++)
-        {
+        for (int i = 0; i < bank.getBanks().size(); i++) {
             System.out.println(i + 1 + " - " + bank.getBanks().get(i).getName());
         }
 
         int bankChoose = s.nextInt();
-        if (bankChoose < 0 || bankChoose > bank.getBanks().size())
-        {
+        if (bankChoose < 0 || bankChoose > bank.getBanks().size()) {
             System.out.println("Некорректный выбор");
             begin(bank);
             return;
@@ -106,15 +94,13 @@ public class InterfaceBank {
         System.out.println("3 - Добавить кредитный счет");
         System.out.println("4 - Добавить лимит для недоверительных клиентов");
         int chooseOperation = s.nextInt();
-        if (chooseOperation < 0 || chooseOperation > 4)
-        {
+        if (chooseOperation < 0 || chooseOperation > 4) {
             System.out.println("Некорректный выбор");
             begin(bank);
             return;
         }
 
-        if (chooseOperation == 0)
-        {
+        if (chooseOperation == 0) {
             begin(bank);
             return;
         }
@@ -122,15 +108,12 @@ public class InterfaceBank {
         String name = bank.getBanks().get(bankChoose - 1).getName();
         var bankChose = bank.getBank(name);
 
-        if (chooseOperation == 1)
-        {
+        if (chooseOperation == 1) {
             System.out.println("Введите ежемесячный процент для дебетового счета(Через запятую после нуля)");
             Float proc = s.nextFloat();
             bankChose.setPercentForDebit(proc);
             bankManagement(bank);
-        }
-        else if (chooseOperation == 2)
-        {
+        } else if (chooseOperation == 2) {
             System.out.println("Введите минимальную и максимальную сумму изначального вклада на данный депозитный счет.\n" +
                     "А также период и процент депозитного счета");
             float minSumFloat = s.nextFloat();
@@ -138,18 +121,14 @@ public class InterfaceBank {
             int period = s.nextInt();
             float percent = s.nextFloat();
             bank.addDepositAccountConditions(minSumFloat, maxSumFloat, period, percent, bankChose.getName());
-        }
-        else if (chooseOperation == 3)
-        {
+        } else if (chooseOperation == 3) {
             System.out.println("Введите минимальную и максимальную сумму для кредитного счета." +
                     "А также сумму которая будет убавляться каждый месяц");
             float minSum = s.nextFloat();
             float maxSum = s.nextFloat();
             float minosSum = s.nextFloat();
             bank.addCreditAccountConditions(minSum, maxSum, minosSum, bankChose.getName());
-        }
-        else if (chooseOperation == 4)
-        {
+        } else if (chooseOperation == 4) {
             System.out.println("Введите максимальную сумму, которую клиент, не указавший паспорт или адресс,\n" +
                     " сможет снять или перевести");
             float minSumFloat = 0f;
@@ -161,18 +140,15 @@ public class InterfaceBank {
 
     }
 
-    private static String bankRegistration(MainBank bank)
-    {
+    private static String bankRegistration(MainBank bank) throws BanksException {
         System.out.println("Введите название банка");
         bank.addBank(s.nextLine());
         begin(bank);
         return null;
     }
 
-    private static String registrationClient(MainBank bank)
-    {
-        if (bank.getBanks().size() == 0)
-        {
+    private static String registrationClient(MainBank bank) throws BanksException {
+        if (bank.getBanks().size() == 0) {
             System.out.println("На данный момент банков не существует");
             begin(bank);
         }
@@ -181,14 +157,12 @@ public class InterfaceBank {
         System.out.println("1 - продолжить");
         System.out.println("2 - вернуться в начало");
         String choose = s.nextLine();
-        if (!Objects.equals(choose, "1") && !Objects.equals(choose, "2"))
-        {
+        if (!Objects.equals(choose, "1") && !Objects.equals(choose, "2")) {
             System.out.println("нет такой цифры");
             begin(bank);
         }
 
-        if (Objects.equals(choose, "2"))
-        {
+        if (Objects.equals(choose, "2")) {
             return choose;
         }
 
@@ -204,15 +178,13 @@ public class InterfaceBank {
 
         System.out.println("Ваш банковский ID - " + client.getId());
         System.out.println("Выберите банк, в котором хотите зарегаться");
-        for (int i = 0; i < bank.getBanks().size(); i++)
-        {
+        for (int i = 0; i < bank.getBanks().size(); i++) {
             System.out.println(i + 1 + " - " + bank.getBanks().get(i).getName());
         }
 
         int bankChoose = s.nextInt();
         if (bankChoose < 0 ||
-                bankChoose > bank.getBanks().size())
-        {
+                bankChoose > bank.getBanks().size()) {
             System.out.println("Некорректный выбор");
         }
 
@@ -223,8 +195,7 @@ public class InterfaceBank {
         String firstPassword = s.nextLine();
         System.out.println("Повторите, пожалуйста");
         String secondPassword = s.nextLine();
-        if (!Objects.equals(secondPassword, firstPassword))
-        {
+        if (!Objects.equals(secondPassword, firstPassword)) {
             System.out.println("Пароли не совпадают((");
             return null;
         }
@@ -235,8 +206,7 @@ public class InterfaceBank {
         return "successful";
     }
 
-    private static String loginClient(MainBank bank)
-    {
+    private static String loginClient(MainBank bank) throws BanksException {
         System.out.println("Введите свой пароль и Id, пожалуйста");
         String password = s.nextLine();
         int id = s.nextInt();
@@ -245,15 +215,13 @@ public class InterfaceBank {
         System.out.println(password);
         bank.login(id, password);
 
-        if(bank.login(id, password) == null)
-        {
+        if (bank.login(id, password) == null) {
             System.out.println("Авторизация неуспешна");
             begin(bank);
         }
 
         System.out.println("Авторизация прошла успешно");
-        if (bank.login(id, password).getAccount() != null)
-        {
+        if (bank.login(id, password).getAccount() != null) {
             Client client = bank.login(id, password);
             System.out.println("Ваш аккаунт: " + bank.login(id, password).getAccount().getName());
             System.out.println("Ваши деньги на акке: " + bank.login(id, password).getAccount().getBalance() + "\n");
@@ -263,55 +231,44 @@ public class InterfaceBank {
             s.nextLine();
             s.nextLine();
             String choice = s.nextLine();
-            if (!Objects.equals(choice, "1") && !Objects.equals(choice, "2") && !Objects.equals(choice, "3"))
-            {
+            if (!Objects.equals(choice, "1") && !Objects.equals(choice, "2") && !Objects.equals(choice, "3")) {
                 System.out.println("Нет такой цифры");
                 begin(bank);
             }
 
-            if (Objects.equals(choice, "1"))
-            {
-                if(!client.getAccount().canCloseAccount())
-                {
+            if (Objects.equals(choice, "1")) {
+                if (!client.getAccount().canCloseAccount()) {
                     System.out.println("У тебя к сожалению нет такой возможности, погаси кредит или дождись конца периода депозита");
                     begin(bank);
-                }else
-                {
+                } else {
                     changeAccount(client, bank);
                 }
             }
 
-            if (Objects.equals(choice, "2"))
-            {
+            if (Objects.equals(choice, "2")) {
                 doTransfer(client, bank);
             }
 
-            if (Objects.equals(choice, "3"))
-            {
+            if (Objects.equals(choice, "3")) {
                 begin(bank);
             }
-        }
-        else
-        {
+        } else {
             System.out.println("Вы пока не завели счет");
             System.out.println("Хотите?)");
             System.out.println("1 - да");
             System.out.println("2 - гоу в начало");
             s.nextLine();
             String account = s.nextLine();
-            if (!Objects.equals(account, "1") && !Objects.equals(account, "2"))
-            {
+            if (!Objects.equals(account, "1") && !Objects.equals(account, "2")) {
                 System.out.println("Нет такой цифры");
                 begin(bank);
             }
 
-            if (Objects.equals(account, "1"))
-            {
+            if (Objects.equals(account, "1")) {
                 setAccount(bank.login(id, password), bank);
             }
 
-            if (Objects.equals(account, "2"))
-            {
+            if (Objects.equals(account, "2")) {
                 begin(bank);
             }
         }
@@ -319,39 +276,32 @@ public class InterfaceBank {
         return null;
     }
 
-    private static void setAccount(Client client, MainBank bank)
-    {
+    private static void setAccount(Client client, MainBank bank) throws BanksException {
         System.out.println("В твоем банке имеются следующие варианты");
-        if(client.getBank().getPercentForDebit() == 0 && client.getBank().getDeposits().size() == 0 && client.getBank().getCredits().size() == 0)
-        {
+        if (client.getBank().getPercentForDebit() == 0 && client.getBank().getDeposits().size() == 0 && client.getBank().getCredits().size() == 0) {
             System.out.println("В твоем банке еще не сделали счетов, подожди немного");
             begin(bank);
         }
-        if (client.getBank().getPercentForDebit() != 0)
-        {
+        if (client.getBank().getPercentForDebit() != 0) {
             System.out.println("1 - Дебетовый аккаунт с ежемесячным начислением в сумме вашего счета умноженного на процент "
                     + client.getBank().getPercentForDebit());
         }
 
-        if (client.getBank().getDeposits().size() != 0)
-        {
+        if (client.getBank().getDeposits().size() != 0) {
             System.out.println("2 - есть варианты депозитного счета в количестве " + client.getBank().getDeposits().size());
         }
 
-        if (client.getBank().getCredits().size() != 0)
-        {
+        if (client.getBank().getCredits().size() != 0) {
             System.out.println("3 - есть варианты кредитного счета в количестве " + client.getBank().getCredits().size());
         }
 
         String account = s.nextLine();
-        if (!Objects.equals(account, "1") && !Objects.equals(account, "2") && !Objects.equals(account, "3"))
-        {
+        if (!Objects.equals(account, "1") && !Objects.equals(account, "2") && !Objects.equals(account, "3")) {
             System.out.println("Нет такой цифры");
             begin(bank);
         }
 
-        if (Objects.equals(account, "1"))
-        {
+        if (Objects.equals(account, "1")) {
             System.out.println("Положи мани");
             float moneyFloat = s.nextFloat();
             bank.addDebitAccountToClient(moneyFloat, client.getId());
@@ -359,12 +309,10 @@ public class InterfaceBank {
             begin(bank);
         }
 
-        if (Objects.equals(account, "2"))
-        {
+        if (Objects.equals(account, "2")) {
             int choice = choiceDeposit(client.getBank().getDeposits());
             if (choice + 1 > client.getBank().getDeposits().size() ||
-                    choice + 1 < 1)
-            {
+                    choice + 1 < 1) {
                 System.out.println("Не было такой цифры");
                 begin(bank);
             }
@@ -375,12 +323,10 @@ public class InterfaceBank {
             System.out.println("Поздравляю, у вас есть депозитный счет");
         }
 
-        if (Objects.equals(account, "3"))
-        {
+        if (Objects.equals(account, "3")) {
             int choice = choiceCredit(client.getBank().getCredits());
             if (choice + 1 > client.getBank().getCredits().size() ||
-                    choice + 1 < 1)
-            {
+                    choice + 1 < 1) {
                 System.out.println("Не было такой цифры");
                 begin(bank);
             }
@@ -394,35 +340,29 @@ public class InterfaceBank {
         begin(bank);
     }
 
-    private static void changeAccount(Client client, MainBank bank)
-    {
+    private static void changeAccount(Client client, MainBank bank) throws BanksException {
         System.out.println("Помимо твоего типа аккаунта: " + client.getAccount().getName());
         System.out.println("В твоем банке имеются следующие варианты:");
-        if (!Objects.equals(client.getAccount().getName(), "debit") && client.getBank().getPercentForDebit() != 0)
-        {
+        if (!Objects.equals(client.getAccount().getName(), "debit") && client.getBank().getPercentForDebit() != 0) {
             System.out.println("1 - Дебетовый аккаунт с ежемесячным начислением в сумме вашего счета умноженного на процент\n "
                     + client.getBank().getPercentForDebit());
         }
 
-        if (!Objects.equals(client.getAccount().getName(), "deposit") && client.getBank().getDeposits().size() != 0)
-        {
+        if (!Objects.equals(client.getAccount().getName(), "deposit") && client.getBank().getDeposits().size() != 0) {
             System.out.println("2 - есть варианты депозитного счета в количестве " + client.getBank().getDeposits().size());
         }
 
-        if (!Objects.equals(client.getAccount().getName(), "Credit") && client.getBank().getCredits().size() != 0)
-        {
+        if (!Objects.equals(client.getAccount().getName(), "Credit") && client.getBank().getCredits().size() != 0) {
             System.out.println("3 - есть варианты кредитного счета в количестве " + client.getBank().getCredits().size());
         }
 
         String account = s.nextLine();
-        if (!Objects.equals(account, "1") && !Objects.equals(account, "2") && !Objects.equals(account, "3"))
-        {
+        if (!Objects.equals(account, "1") && !Objects.equals(account, "2") && !Objects.equals(account, "3")) {
             System.out.println("Нет такой цифры");
             begin(bank);
         }
 
-        if (Objects.equals(account, "1"))
-        {
+        if (Objects.equals(account, "1")) {
             System.out.println("Положи мани");
             float moneyFloat = 0f;
             float money = s.nextFloat();
@@ -431,12 +371,10 @@ public class InterfaceBank {
             begin(bank);
         }
 
-        if (Objects.equals(account, "2"))
-        {
+        if (Objects.equals(account, "2")) {
             int choice = choiceDeposit(client.getBank().getDeposits());
             if (choice + 1 > client.getBank().getDeposits().size() ||
-                    choice + 1 < 1)
-            {
+                    choice + 1 < 1) {
                 System.out.println("Не было такой цифры");
                 begin(bank);
             }
@@ -447,12 +385,10 @@ public class InterfaceBank {
             System.out.println("Поздравляю, у вас есть депозитный счет");
         }
 
-        if (Objects.equals(account, "3"))
-        {
+        if (Objects.equals(account, "3")) {
             int choice = choiceCredit(client.getBank().getCredits());
             if (choice + 1 > client.getBank().getCredits().size() ||
-                    choice + 1 < 1)
-            {
+                    choice + 1 < 1) {
                 System.out.println("Не было такой цифры");
                 begin(bank);
             }
@@ -466,10 +402,8 @@ public class InterfaceBank {
         begin(bank);
     }
 
-    private static int choiceDeposit(List<IAccount> depositAccounts)
-    {
-        for (int i = 0; i < depositAccounts.size(); i++)
-        {
+    private static int choiceDeposit(List<Account> depositAccounts) {
+        for (int i = 0; i < depositAccounts.size(); i++) {
             System.out.println(i + 1 + " - минимальный вклад - " + depositAccounts.get(i).minMoney());
             System.out.println("максимальный вклад - " + depositAccounts.get(i).maxMoney());
             System.out.println("период - " + depositAccounts.get(i).getPeriod());
@@ -480,10 +414,8 @@ public class InterfaceBank {
         return choice - 1;
     }
 
-    private static int choiceCredit(List<IAccount> creditAccounts)
-    {
-        for (int i = 0; i < creditAccounts.size(); i++)
-        {
+    private static int choiceCredit(List<Account> creditAccounts) {
+        for (int i = 0; i < creditAccounts.size(); i++) {
             System.out.println((i + 1 + " - минимальный вклад - " + creditAccounts.get(i).minMoney()));
             System.out.println("максимальный вклад - " + creditAccounts.get(i).maxMoney());
             System.out.println("сумма вычета каждый месяц - " + creditAccounts.get(i).getMinusSum());
@@ -493,13 +425,11 @@ public class InterfaceBank {
         return choice - 1;
     }
 
-    private static void doTransfer(Client client, MainBank bank)
-    {
+    private static void doTransfer(Client client, MainBank bank) throws BanksException {
         System.out.println("Введите сумму перевода и ID клиента");
         float money = s.nextFloat();
         int idSecond = s.nextInt();
-        if (money > client.getAccount().getBalance())
-        {
+        if (money > client.getAccount().getBalance()) {
             System.out.println("А не много ли?)");
             begin(bank);
         }
