@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface CatDAO {
 
-    public Cat findById(int id);
+    Cat findById(int id);
 
-    public void save(Cat cat);
+    void save(Cat cat);
 
-    public void update(Cat cat);
+    void update(Cat cat);
 
-    public void delete(Cat cat);
+    void delete(Cat cat);
 
-    public List<Cat> getAll();
+    List<Cat> getAll();
 }

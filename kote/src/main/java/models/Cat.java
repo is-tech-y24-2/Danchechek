@@ -3,8 +3,9 @@ package models;
 
 import jakarta.persistence.*;
 
+
 @Entity
-@Table(name = "cats3")
+@Table(name = "cats")
 public class Cat {
 
     @Id
@@ -25,18 +26,6 @@ public class Cat {
 
     public Cat() {
     }
-
-//    public void addFriend(String id)
-//    {
-//        if(Arrays.stream(friends).toList().contains(id))
-//        {
-//            new ServiceException("Invalid operation");
-//        }
-//
-//        var list = Arrays.stream(friends).toList();
-//        list.add(id);
-//        friends = (String[]) list.toArray();
-//    }
 
     public Cat(int passportOwner, String date, String breed, String color, int passportCode) {
         this.passportOwner = passportOwner;
