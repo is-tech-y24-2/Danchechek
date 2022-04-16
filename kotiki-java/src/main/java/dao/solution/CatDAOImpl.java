@@ -1,4 +1,4 @@
-package dao.solution;
+package ru.itmo.kotiki.dao.solution;
 
 import dao.CatDAO;
 import hibernate.HibernateSessionFactoryUtil;

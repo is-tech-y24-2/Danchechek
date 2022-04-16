@@ -1,4 +1,4 @@
-package dao.solution;
+package ru.itmo.kotiki.dao.solution;
 
 import dao.OwnerDAO;
 import hibernate.HibernateSessionFactoryUtil;
@@ -36,10 +36,6 @@ public class OwnerDAOImpl implements OwnerDAO {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         for (int i = 0; i < getAll().size(); i++) {
-            System.out.println(getAll().get(i).getName());
-            System.out.println(owner.getName());
-            System.out.println(getAll().get(i).getName());
-            System.out.println(owner.getDate());
             if (Objects.equals(getAll().get(i).getName(), owner.getName())
                     && Objects.equals(getAll().get(i).getDate(), owner.getDate())) {
                 session.remove(session.get(Owner.class, getAll().get(i).getId()));

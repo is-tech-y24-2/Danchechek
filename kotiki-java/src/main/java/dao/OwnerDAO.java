@@ -1,4 +1,4 @@
-package dao;
+package ru.itmo.kotiki.dao;
 
 import models.Owner;
 

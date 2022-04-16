@@ -1,4 +1,4 @@
-package service.solution;
+package ru.itmo.kotiki.service.solution;
 
 import dao.CatDAO;
 import dao.FriendsDAO;

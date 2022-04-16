@@ -1,7 +1,8 @@
-package service.interfaces;
+package ru.itmo.kotiki.service.interfaces;
 
 import models.Cat;
 import models.Friends;
+import models.Owner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface CatService {
     List<Cat> getAllCats();
 
-    void saveCat(Cat cat);
+    void saveCat(Cat cat, Owner owner);
 
     Cat findByPassportCat(int passport);
 

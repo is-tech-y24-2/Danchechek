@@ -1,4 +1,4 @@
-package tools;
+package ru.itmo.kotiki.tools;
 
 public class ServiceException extends RuntimeException {
     public ServiceException() {

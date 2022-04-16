@@ -1,4 +1,4 @@
-package enums;
+package ru.itmo.kotiki.enums;
 
 public enum CatBreed {
     ASIAN,

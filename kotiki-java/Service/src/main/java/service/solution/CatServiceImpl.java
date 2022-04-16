@@ -1,4 +1,4 @@
-package service.solution;
+package ru.itmo.kotiki.service.solution;
 
 import dao.CatDAO;
 import dao.FriendsDAO;
@@ -9,12 +9,11 @@ import dao.solution.OwnerDAOImpl;
 import models.Cat;
 import models.Friends;
 import models.Owner;
-import service.CatService;
+import service.interfaces.CatService;
 import tools.ServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class CatServiceImpl implements CatService {
     private FriendsDAO friendsDAO = new FriendsDAOImpl();
@@ -27,13 +26,10 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public void saveCat(Cat cat) {
-        var all = ownerDAO.getAll();
-        for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getPassportCode() == cat.getPassportOwner()) {
-                catDAO.save(cat);
-                return;
-            }
+    public void saveCat(Cat cat, Owner owner) {
+        if(owner.getPassportCode()==cat.getPassportOwner())
+        {
+            catDAO.save(cat);
         }
         new ServiceException("Нет такого владельца");
     }
@@ -41,9 +37,9 @@ public class CatServiceImpl implements CatService {
     @Override
     public Cat findByPassportCat(int passport) {
         var all = catDAO.getAll();
-        for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getPassportCode() == passport) {
-                return all.get(i);
+        for (Cat cat : all) {
+            if (cat.getPassportCode() == passport) {
+                return cat;
             }
         }
 
@@ -60,13 +56,13 @@ public class CatServiceImpl implements CatService {
         Cat cat = findByPassportCat(passportCode);
         List<Cat> friends = new ArrayList<>();
         List<Friends> allPairs = friendsDAO.getAll();
-        for (int i = 0; i < allPairs.size(); i++) {
-            if (allPairs.get(i).getFirst() == passportCode) {
-                friends.add(findByPassportCat(allPairs.get(i).getSecond()));
+        for (Friends allPair : allPairs) {
+            if (allPair.getFirst() == passportCode) {
+                friends.add(findByPassportCat(allPair.getSecond()));
             }
 
-            if (allPairs.get(i).getSecond() == passportCode) {
-                friends.add(findByPassportCat(allPairs.get(i).getFirst()));
+            if (allPair.getSecond() == passportCode) {
+                friends.add(findByPassportCat(allPair.getFirst()));
             }
         }
 
@@ -78,9 +74,9 @@ public class CatServiceImpl implements CatService {
         Owner owner = findByPassportOwner(passportCode);
         var cats = catDAO.getAll();
         List<Cat> ownerCats = new ArrayList<>();
-        for (int i = 0; i < cats.size(); i++) {
-            if (cats.get(i).getPassportOwner() == owner.getPassportCode()) {
-                ownerCats.add(cats.get(i));
+        for (Cat cat : cats) {
+            if (cat.getPassportOwner() == owner.getPassportCode()) {
+                ownerCats.add(cat);
             }
         }
 
@@ -115,9 +111,9 @@ public class CatServiceImpl implements CatService {
 
     private Owner findByPassportOwner(int passport) {
         var all = ownerDAO.getAll();
-        for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getPassportCode() == passport) {
-                return all.get(i);
+        for (Owner owner : all) {
+            if (owner.getPassportCode() == passport) {
+                return owner;
             }
         }
 

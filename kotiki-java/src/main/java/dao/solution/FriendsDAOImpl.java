@@ -1,4 +1,4 @@
-package dao.solution;
+package ru.itmo.kotiki.dao.solution;
 
 import dao.FriendsDAO;
 import hibernate.HibernateSessionFactoryUtil;

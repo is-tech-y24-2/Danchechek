@@ -1,4 +1,4 @@
-package models;
+package ru.itmo.kotiki.models;
 
 
 import enums.CatBreed;

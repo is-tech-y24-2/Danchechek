@@ -1,4 +1,4 @@
-package hibernate;
+package ru.itmo.kotiki.hibernate;
 
 import models.Cat;
 import models.Friends;
