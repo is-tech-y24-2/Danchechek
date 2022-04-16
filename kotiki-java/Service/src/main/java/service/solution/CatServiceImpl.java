@@ -28,8 +28,9 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void saveCat(Cat cat) {
-        for (int i = 0; i < ownerDAO.getAll().size(); i++) {
-            if (ownerDAO.getAll().get(i).getPassportCode() == cat.getPassportOwner()) {
+        var all = ownerDAO.getAll();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getPassportCode() == cat.getPassportOwner()) {
                 catDAO.save(cat);
                 return;
             }
@@ -39,9 +40,10 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat findByPassportCat(int passport) {
-        for (int i = 0; i < catDAO.getAll().size(); i++) {
-            if (catDAO.getAll().get(i).getPassportCode() == passport) {
-                return catDAO.getAll().get(i);
+        var all = catDAO.getAll();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getPassportCode() == passport) {
+                return all.get(i);
             }
         }
 
@@ -112,9 +114,10 @@ public class CatServiceImpl implements CatService {
     }
 
     private Owner findByPassportOwner(int passport) {
-        for (int i = 0; i < ownerDAO.getAll().size(); i++) {
-            if (ownerDAO.getAll().get(i).getPassportCode() == passport) {
-                return ownerDAO.getAll().get(i);
+        var all = ownerDAO.getAll();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getPassportCode() == passport) {
+                return all.get(i);
             }
         }
 

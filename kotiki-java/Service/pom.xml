@@ -12,7 +12,7 @@
     <artifactId>service</artifactId>
     <dependencies>
         <dependency>
-            <groupId>ru.itmo</groupId>
+            <groupId>ru.itmo.kotiksy-java</groupId>
             <artifactId>kotiksy-java</artifactId>
             <version>${snapshot.version}</version>
             <scope>compile</scope>

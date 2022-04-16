@@ -1,4 +1,4 @@
-package service;
+package service.interfaces;
 
 import models.Cat;
 import models.Owner;
