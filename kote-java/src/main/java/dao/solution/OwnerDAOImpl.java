@@ -52,4 +52,9 @@ public class OwnerDAOImpl implements OwnerDAO {
     public List<Owner> getAll() {
         return (List<Owner>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("From Owner").list();
     }
+
+    @Override
+    public Owner getAll(int i) {
+        return getAll().get(i);
+    }
 }

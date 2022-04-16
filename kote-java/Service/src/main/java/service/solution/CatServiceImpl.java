@@ -28,9 +28,6 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void saveCat(Cat cat) {
-        IntStream.range(0, catDAO.getAll().size())
-                .filter(i -> catDAO.getAll().get(i).getPassportCode() == cat.getPassportCode())
-                .forEach(i -> new ServiceException("Not unique passport, arrest"));
         for (int i = 0; i < ownerDAO.getAll().size(); i++) {
             if (ownerDAO.getAll().get(i).getPassportCode() == cat.getPassportOwner()) {
                 catDAO.save(cat);
@@ -95,11 +92,12 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void addPairFriend(Friends friends) {
-        for (int i = 0; i < getAllFriends().size(); i++) {
-            if ((getAllFriends().get(i).getSecond() == friends.getSecond()
-                    && getAllFriends().get(i).getFirst() == friends.getFirst())
-                    || (getAllFriends().get(i).getSecond() == friends.getFirst()
-                    && getAllFriends().get(i).getFirst() == friends.getSecond())
+        var all = getAllFriends();
+        for (Friends value : all) {
+            if ((value.getSecond() == friends.getSecond()
+                    && value.getFirst() == friends.getFirst())
+                    || (value.getSecond() == friends.getFirst()
+                    && value.getFirst() == friends.getSecond())
 
             ) {
                 new ServiceException("Уже есть аналогичная пара");

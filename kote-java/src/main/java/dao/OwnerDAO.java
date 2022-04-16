@@ -15,4 +15,6 @@ public interface OwnerDAO {
     void delete(Owner owner);
 
     List<Owner> getAll();
+
+    Owner getAll(int i);
 }

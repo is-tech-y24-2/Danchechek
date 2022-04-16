@@ -1,7 +1,6 @@
 package dao;
 
 import models.Cat;
-import models.Friends;
 
 import java.util.List;
 
@@ -16,4 +15,6 @@ public interface CatDAO {
     void delete(Cat cat);
 
     List<Cat> getAll();
+
+    Cat getAll(int i);
 }

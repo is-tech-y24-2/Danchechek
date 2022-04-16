@@ -15,4 +15,6 @@ public interface FriendsDAO {
     void delete(Friends friend);
 
     List<Friends> getAll();
+
+    Friends getAll(int i);
 }

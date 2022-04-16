@@ -36,12 +36,12 @@ public class CatDAOImpl implements CatDAO {
         Transaction tx = session.beginTransaction();
         for(int i = 0; i < getAll().size(); i++)
         {
-            if(getAll().get(i).getPassportOwner() == cat.getPassportOwner()
-            && Objects.equals(getAll().get(i).getDate(), cat.getDate())
-            && Objects.equals(getAll().get(i).getBreed(), cat.getBreed())
-            && Objects.equals(getAll().get(i).getColor(), cat.getColor()))
+            if(getAll(i).getPassportOwner() == cat.getPassportOwner()
+            && Objects.equals(getAll(i).getDate(), cat.getDate())
+            && Objects.equals(getAll(i).getBreed(), cat.getBreed())
+            && Objects.equals(getAll(i).getColor(), cat.getColor()))
             {
-                session.remove(session.get(Cat.class, getAll().get(i).getId()));
+                session.remove(session.get(Cat.class, getAll(i).getId()));
                 tx.commit();
                 session.close();
             }
@@ -51,5 +51,10 @@ public class CatDAOImpl implements CatDAO {
     @Override
     public List<Cat> getAll() {
         return (List<Cat>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("From Cat").list();
+    }
+
+    @Override
+    public Cat getAll(int i) {
+        return getAll().get(i);
     }
 }

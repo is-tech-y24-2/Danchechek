@@ -1,11 +1,13 @@
 package models;
 
 
+import enums.CatBreed;
+import enums.CatColor;
 import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "cats")
+@Table(name = "cats3")
 public class Cat {
 
     @Id
@@ -18,16 +20,16 @@ public class Cat {
     @Column(name = "date")
     private String date;
     @Column(name = "breed")
-    private String breed;
+    private CatBreed breed;
     @Column(name = "color")
-    private String color;
+    private CatColor color;
     @Column(name = "passport_code")
     private int passportCode;
 
     public Cat() {
     }
 
-    public Cat(int passportOwner, String date, String breed, String color, int passportCode) {
+    public Cat(int passportOwner, String date, CatBreed breed, CatColor color, int passportCode) {
         this.passportOwner = passportOwner;
         this.date = date;
         this.breed = breed;
@@ -43,16 +45,11 @@ public class Cat {
         return date;
     }
 
-    public String getBreed() {
+    public CatBreed getBreed() {
         return breed;
     }
 
-//    public String[] getFriends()
-//    {
-//        return friends;
-//    }
-
-    public String getColor() {
+    public CatColor getColor() {
         return color;
     }
 

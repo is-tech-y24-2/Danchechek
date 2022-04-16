@@ -36,10 +36,10 @@ public class FriendsDAOImpl implements FriendsDAO {
         Transaction tx = session.beginTransaction();
         for(int i = 0; i < getAll().size(); i++)
         {
-            if(getAll().get(i).getFirst() == friend.getFirst()
-                    && Objects.equals(getAll().get(i).getSecond(), friend.getSecond()))
+            if(getAll(i).getFirst() == friend.getFirst()
+                    && Objects.equals(getAll(i).getSecond(), friend.getSecond()))
             {
-                session.remove(session.get(Friends.class, getAll().get(i).getId()));
+                session.remove(session.get(Friends.class, getAll(i).getId()));
                 tx.commit();
                 session.close();
             }
@@ -49,5 +49,10 @@ public class FriendsDAOImpl implements FriendsDAO {
     @Override
     public List<Friends> getAll() {
         return (List<Friends>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("From Friends").list();
+    }
+
+    @Override
+    public Friends getAll(int i) {
+        return getAll().get(i);
     }
 }
