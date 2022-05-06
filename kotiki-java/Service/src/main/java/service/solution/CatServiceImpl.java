@@ -36,14 +36,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat findByPassportCat(int passport) {
-        var all = catDAO.getAll();
-        for (Cat cat : all) {
-            if (cat.getPassportCode() == passport) {
-                return cat;
-            }
-        }
-
-        return null;
+        return catDAO.findByPassportCat(passport);
     }
 
     @Override
@@ -53,7 +46,6 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public ArrayList<Cat> getFriendsCat(int passportCode) {
-        Cat cat = findByPassportCat(passportCode);
         List<Cat> friends = new ArrayList<>();
         List<Friends> allPairs = friendsDAO.getAll();
         for (Friends allPair : allPairs) {
@@ -71,16 +63,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public List<Cat> getOwnerCats(int passportCode) {
-        Owner owner = findByPassportOwner(passportCode);
-        var cats = catDAO.getAll();
-        List<Cat> ownerCats = new ArrayList<>();
-        for (Cat cat : cats) {
-            if (cat.getPassportOwner() == owner.getPassportCode()) {
-                ownerCats.add(cat);
-            }
-        }
-
-        return ownerCats;
+        return catDAO.getOwnerCats(passportCode);
     }
 
     @Override
@@ -90,33 +73,6 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void addPairFriend(Friends friends) {
-        var all = getAllFriends();
-        for (Friends value : all) {
-            if ((value.getSecond() == friends.getSecond()
-                    && value.getFirst() == friends.getFirst())
-                    || (value.getSecond() == friends.getFirst()
-                    && value.getFirst() == friends.getSecond())
-
-            ) {
-                new ServiceException("Уже есть аналогичная пара");
-            }
-        }
-
         friendsDAO.save(friends);
-    }
-
-    public List<Friends> getAllFriends() {
-        return friendsDAO.getAll();
-    }
-
-    private Owner findByPassportOwner(int passport) {
-        var all = ownerDAO.getAll();
-        for (Owner owner : all) {
-            if (owner.getPassportCode() == passport) {
-                return owner;
-            }
-        }
-
-        return null;
     }
 }

@@ -17,4 +17,8 @@ public interface CatDAO {
     List<Cat> getAll();
 
     Cat getAll(int i);
+
+    Cat findByPassportCat(int passport);
+
+    List<Cat> getOwnerCats(int passport);
 }

@@ -57,4 +57,20 @@ public class CatDAOImpl implements CatDAO {
     public Cat getAll(int i) {
         return getAll().get(i);
     }
+
+    @Override
+    public Cat findByPassportCat(int passport) {
+        Query query = HibernateSessionFactoryUtil.getSessionFactory().openSession()
+                .createQuery("From Cat where passportCode = :name");
+        query.setParameter("name", passport);
+        return (Cat) query.getSingleResult();
+    }
+
+    @Override
+    public List<Cat> getOwnerCats(int passport) {
+        Query query = HibernateSessionFactoryUtil.getSessionFactory().openSession()
+                .createQuery("From Cat where passportOwner = :name");
+        query.setParameter("name", passport);
+        return (List<Cat>) query.stream().toList();
+    }
 }

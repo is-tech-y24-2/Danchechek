@@ -13,6 +13,4 @@ public interface OwnerService {
     void deleteOwner(Owner owner);
 
     Owner findByPassportOwner(int passport);
-
-    List<Cat> getOwnerCats(int passportCode);
 }

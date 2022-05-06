@@ -16,7 +16,7 @@ public interface CatService {
 
     void deleteCat(Cat cat);
 
-    ArrayList<Cat> getFriendsCat(int passportCode);
+    List<Cat> getFriendsCat(int passportCode);
 
     List<Cat> getOwnerCats(int passportCode);
 

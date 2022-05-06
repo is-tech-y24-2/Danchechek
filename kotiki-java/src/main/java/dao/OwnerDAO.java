@@ -14,6 +14,8 @@ public interface OwnerDAO {
 
     void delete(Owner owner);
 
+    Owner findByPassportOwner(int passport);
+
     List<Owner> getAll();
 
     Owner getAll(int i);

@@ -45,6 +45,14 @@ public class OwnerDAOImpl implements OwnerDAO {
         }
     }
 
+    @Override
+    public Owner findByPassportOwner(int passport) {
+        Query query = HibernateSessionFactoryUtil.getSessionFactory().openSession()
+                .createQuery("From Owner where passportCode = :name");
+        query.setParameter("name", passport);
+        return (Owner) query.getSingleResult();
+    }
+
     public List<Owner> getAll() {
         return (List<Owner>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("From Owner").list();
     }
