@@ -44,8 +44,9 @@ public class CatServiceImpl implements CatService {
         catDAO.delete(cat);
     }
 
+    //тТут именно нужны все пары друзей(не котов) чтобы получить в результате всех друзей конкретного кота
     @Override
-    public ArrayList<Cat> getFriendsCat(int passportCode) {
+    public List<Cat> getFriendsCat(int passportCode) {
         List<Cat> friends = new ArrayList<>();
         List<Friends> allPairs = friendsDAO.getAll();
         for (Friends allPair : allPairs) {
