@@ -1,4 +1,4 @@
-package app.enums;
+package ru.itmo.kotiks-spring-java.enums;
 
 public enum CatColor {
     GRAY,

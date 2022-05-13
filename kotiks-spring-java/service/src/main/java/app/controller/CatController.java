@@ -1,11 +1,12 @@
-package app.controller;
+package ru.itmo.kotiks-spring-java.controller;
 
-import app.entity.CatEntity;
-import app.entity.FriendsEntity;
+import ru.itmo.kotiks-spring-java.entity.CatEntity;
+import ru.itmo.kotiks-spring-java.entity.FriendsEntity;
+import ru.itmo.kotiks-spring-java.service.CatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.service.CatService;
+import ru.itmo.kotiks-spring-java.service.CatServiceImpl;
 
 @RestController
 @RequestMapping("/cats")
@@ -14,7 +15,7 @@ public class CatController {
     @Autowired
     private CatService catService;
 
-    @GetMapping("/allcats")
+    @GetMapping()
     public ResponseEntity getAllCats() {
         try {
             return ResponseEntity.badRequest().body(catService.getAllCats());
@@ -40,7 +41,7 @@ public class CatController {
     public ResponseEntity saveCat(@RequestBody CatEntity cat) {
         try {
             if (catService.saveCat(cat)) {
-                return ResponseEntity.badRequest().body("сохранил)");
+                return ResponseEntity.badRequest().body(catService.findByPassportCat(cat.getPassportCode()));
             } else {
                 return ResponseEntity.badRequest().body("нет такого пользователя");
             }

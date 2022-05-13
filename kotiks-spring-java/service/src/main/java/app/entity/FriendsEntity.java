@@ -1,4 +1,4 @@
-package app.entity;
+package ru.itmo.kotiks-spring-java.entity;
 
 import javax.persistence.*;
 

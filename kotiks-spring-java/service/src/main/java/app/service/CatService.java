@@ -1,114 +1,28 @@
-package app.service;
+package ru.itmo.kotiks-spring-java.service;
 
-import app.entity.CatEntity;
-import app.entity.FriendsEntity;
-import app.entity.OwnerEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import app.repository.CatRepository;
-import app.repository.FriendsRepository;
-import app.repository.OwnerRepository;
+import ru.itmo.kotiks-spring-java.entity.CatEntity;
+import ru.itmo.kotiks-spring-java.entity.FriendsEntity;
+import ru.itmo.kotiks-spring-java.entity.OwnerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-public class CatService {
+public interface CatService {
+    List<CatEntity> getAllCats();
 
-    @Autowired
-    private CatRepository catRepository;
-    @Autowired
-    private FriendsRepository friendsRepository;
-    @Autowired
-    private OwnerRepository ownerRepository;
+    boolean saveCat(CatEntity cat);
 
-    public List<CatEntity> getAllCats() {
-        return catRepository.getAll();
-    }
+    CatEntity findByPassportCat(int passport);
 
-    public boolean saveCat(CatEntity cat) {
-        ArrayList<OwnerEntity> owners = new ArrayList<>();
-        ownerRepository.findAll().forEach(owners::add);
-        for (int i = 0; i < owners.size(); i++) {
-            if (owners.get(i).getPassportCode() == cat.getPassportOwner()) {
-                catRepository.save(cat);
-                return true;
-            }
-        }
-        return false;
-    }
+    void deleteCat(CatEntity cat);
 
-    public CatEntity findByPassportCat(int passport) {
-        return catRepository.findCatByPassport(passport);
-    }
+    ArrayList<CatEntity> getFriendsCat(int passportCode);
 
-    public void deleteCat(CatEntity cat) {
-        catRepository.delete(cat);
-    }
+    List<CatEntity> getOwnerCats(int passportCode);
 
-    public ArrayList<CatEntity> getFriendsCat(int passportCode) {
-        CatEntity cat = findByPassportCat(passportCode);
-        List<CatEntity> friends = new ArrayList<>();
-        List<FriendsEntity> allPairs = new ArrayList<>();
-        friendsRepository.findAll().forEach(allPairs::add);
-        for (FriendsEntity allPair : allPairs) {
-            if (allPair.getFirst() == passportCode) {
-                friends.add(findByPassportCat(allPair.getSecond()));
-            }
+    void deletePairFriends(FriendsEntity friends);
 
-            if (allPair.getSecond() == passportCode) {
-                friends.add(findByPassportCat(allPair.getFirst()));
-            }
-        }
+    boolean addPairFriend(FriendsEntity friends);
 
-        return (ArrayList<CatEntity>) friends;
-    }
-
-    public List<CatEntity> getOwnerCats(int passportCode) {
-        OwnerEntity owner = new OwnerEntity();
-        ArrayList<OwnerEntity> owners = new ArrayList<>();
-        ownerRepository.findAll().forEach(owners::add);
-        for (int i = 0; i < owners.size(); i++) {
-            if (owners.get(i).getPassportCode() == passportCode) {
-                owner = owners.get(i);
-            }
-        }
-        ArrayList<CatEntity> cats = new ArrayList<>();
-        catRepository.findAll().forEach(cats::add);
-        List<CatEntity> ownerCats = new ArrayList<>();
-        for (CatEntity cat : cats) {
-            if (cat.getPassportOwner() == owner.getPassportCode()) {
-                ownerCats.add(cat);
-            }
-        }
-
-        return ownerCats;
-    }
-
-    public void deletePairFriends(FriendsEntity friends) {
-        friendsRepository.delete(friends);
-    }
-
-    public boolean addPairFriend(FriendsEntity friends) {
-        var all = getAllFriends();
-        for (FriendsEntity value : all) {
-            if ((value.getSecond() == friends.getSecond()
-                    && value.getFirst() == friends.getFirst())
-                    || (value.getSecond() == friends.getFirst()
-                    && value.getFirst() == friends.getSecond())
-
-            ) {
-                return false;
-            }
-        }
-
-        friendsRepository.save(friends);
-        return true;
-    }
-
-    public List<FriendsEntity> getAllFriends() {
-        ArrayList<FriendsEntity> friends = new ArrayList<>();
-        friendsRepository.findAll().forEach(friends::add);
-        return friends;
-    }
+    List<FriendsEntity> getAllFriends();
 }

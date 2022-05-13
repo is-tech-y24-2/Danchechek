@@ -1,12 +1,12 @@
-package app.entity;
+package ru.itmo.kotiks-spring-java.entity;
 
-import app.enums.CatBreed;
-import app.enums.CatColor;
+import ru.itmo.kotiks-spring-java.enums.CatBreed;
+import ru.itmo.kotiks-spring-java.enums.CatColor;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cats3")
+@Table(name = "cats")
 public class CatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

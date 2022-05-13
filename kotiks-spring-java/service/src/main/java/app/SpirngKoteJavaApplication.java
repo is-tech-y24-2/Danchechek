@@ -1,10 +1,8 @@
-package app;
+package ru.itmo.kotiks-spring-java.SpirngKoteJavaApplication ;
 
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-
 @SpringBootApplication
 public class SpirngKoteJavaApplication {
     public static void main(String[] args) {

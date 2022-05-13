@@ -1,32 +1,16 @@
-package app.service;
+package ru.itmo.kotiks-spring-java.service;
 
-import app.entity.OwnerEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import app.repository.OwnerRepository;
+import ru.itmo.kotiks-spring-java.entity.OwnerEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Service
-public class OwnerService {
+public interface OwnerService {
 
-    @Autowired
-    private OwnerRepository ownerRepository;
+    void saveOwner(OwnerEntity owner);
 
-    public void saveOwner(OwnerEntity owner) {
-        ownerRepository.save(owner);
-    }
+    List<OwnerEntity> getAllOwners();
 
-    public List<OwnerEntity> getAllOwners() {
-        return ownerRepository.getAll();
-    }
+    void deleteOwner(OwnerEntity owner);
 
-    public void deleteOwner(OwnerEntity owner) {
-        ownerRepository.delete(owner);
-    }
-
-    public OwnerEntity findByPassportOwner(int passport) {
-        return ownerRepository.findCatByPassport(passport);
-    }
+    OwnerEntity findByPassportOwner(int passport);
 }

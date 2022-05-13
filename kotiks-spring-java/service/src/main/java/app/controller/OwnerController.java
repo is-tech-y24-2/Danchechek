@@ -1,10 +1,11 @@
-package app.controller;
+package ru.itmo.kotiks-spring-java.controller;
 
-import app.entity.OwnerEntity;
+import ru.itmo.kotiks-spring-java.entity.OwnerEntity;
+import ru.itmo.kotiks-spring-java.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.service.OwnerService;
+import ru.itmo.kotiks-spring-java.service.OwnerServiceImpl;
 
 @RestController
 @RequestMapping("/owners")
@@ -17,7 +18,7 @@ public class OwnerController {
     public ResponseEntity saveOwner(@RequestBody OwnerEntity owner) {
         try {
             ownerService.saveOwner(owner);
-            return ResponseEntity.badRequest().body("Успешно сохранен");
+            return ResponseEntity.badRequest().body(ownerService.findByPassportOwner(owner.getPassportCode()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Неуспешная группа");
         }
