@@ -14,18 +14,50 @@ public class OwnerServiceImpl implements OwnerService {
     private OwnerRepository ownerRepository;
 
     public void saveOwner(OwnerEntity owner) {
-        ownerRepository.save(owner);
+        try {
+            ownerRepository.save(owner);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public List<OwnerEntity> getAllOwners() {
-        return ownerRepository.findAll();
+        try {
+            return ownerRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
-    public void deleteOwner(OwnerEntity owner) {
-        ownerRepository.delete(owner);
+    public void deleteOwner(int passportCode) {
+        try {
+            ownerRepository.delete(findByPassportOwner(passportCode));
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public OwnerEntity findByPassportOwner(int passport) {
-        return ownerRepository.findCatByPassport(passport);
+        try {
+            return ownerRepository.findOwnerByPassport(passport);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<OwnerView> convert(List<OwnerEntity> owners) {
+        List<OwnerView> catViews = new ArrayList<>();
+        for (int i = 0; i < owners.size(); i++) {
+            OwnerEntity owner = owners.get(i);
+            catViews.add(new OwnerView(owner.getName(), owner.getDate()));
+        }
+        return catViews;
+    }
+
+    @Override
+    public OwnerView convert(OwnerEntity owner) {
+        OwnerView ownerView = new OwnerView(owner.getName(), owner.getDate());
+        return ownerView;
     }
 }

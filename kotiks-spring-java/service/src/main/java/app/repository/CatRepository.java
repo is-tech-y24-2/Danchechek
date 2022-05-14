@@ -10,10 +10,13 @@ import java.util.List;
 
 public interface CatRepository extends CrudRepository<CatEntity, Integer> {
     @Query("select e from CatEntity e where e.passportCode = :code")
-    CatEntity findCatByPassport(@Param("code") int salary);
+    CatEntity findCatByPassport(@Param("code") int code);
 
     @Query("FROM CatEntity t")
     List<CatEntity> getAll();
+
+    @Query("select e from CatEntity e where e.passportOwner = :code")
+    List<CatEntity> findOwnerCats(@Param("code") int code);
 
     @Override
     @Query("from CatEntity")

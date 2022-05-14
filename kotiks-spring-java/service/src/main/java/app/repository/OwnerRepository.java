@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface OwnerRepository extends CrudRepository<OwnerEntity, Integer> {
     @Query("select e from OwnerEntity e where e.passportCode = :code")
-    OwnerEntity findCatByPassport(@Param("code") int salary);
+    OwnerEntity findOwnerByPassport(@Param("code") int code);
 
     @Query("FROM OwnerEntity")
     List<OwnerEntity> findAll();

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CatServiceImpl implements CatService{
+public class CatServiceImpl implements CatService {
 
     @Autowired
     private CatRepository catRepository;
@@ -23,88 +23,118 @@ public class CatServiceImpl implements CatService{
     private OwnerRepository ownerRepository;
 
     public List<CatEntity> getAllCats() {
-        return catRepository.getAll();
+        try {
+            return catRepository.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public boolean saveCat(CatEntity cat) {
-        List<OwnerEntity> owners =  ownerRepository.findAll();
-        for (int i = 0; i < owners.size(); i++) {
-            if (owners.get(i).getPassportCode() == cat.getPassportOwner()) {
+        try {
+            if (ownerRepository.findOwnerByPassport(cat.getPassportOwner()) != null) {
                 catRepository.save(cat);
                 return true;
             }
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
         }
-        return false;
     }
 
     public CatEntity findByPassportCat(int passport) {
-        return catRepository.findCatByPassport(passport);
+        try {
+            return catRepository.findCatByPassport(passport);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
-    public void deleteCat(CatEntity cat) {
-        catRepository.delete(cat);
+    public void deleteCat(int passportCode) {
+        try {
+            catRepository.delete(findByPassportCat(passportCode));
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public ArrayList<CatEntity> getFriendsCat(int passportCode) {
-        CatEntity cat = findByPassportCat(passportCode);
-        List<CatEntity> friends = new ArrayList<>();
-        List<FriendsEntity> allPairs = friendsRepository.findAll();
-        for (FriendsEntity allPair : allPairs) {
-            if (allPair.getFirst() == passportCode) {
-                friends.add(findByPassportCat(allPair.getSecond()));
+        try {
+            CatEntity cat = findByPassportCat(passportCode);
+            List<CatEntity> friends = new ArrayList<>();
+            List<FriendsEntity> allPairs = friendsRepository.findAll();
+            for (FriendsEntity allPair : allPairs) {
+                if (allPair.getFirst() == passportCode) {
+                    friends.add(findByPassportCat(allPair.getSecond()));
+                }
+
+                if (allPair.getSecond() == passportCode) {
+                    friends.add(findByPassportCat(allPair.getFirst()));
+                }
             }
 
-            if (allPair.getSecond() == passportCode) {
-                friends.add(findByPassportCat(allPair.getFirst()));
-            }
+            return (ArrayList<CatEntity>) friends;
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
         }
-
-        return (ArrayList<CatEntity>) friends;
     }
 
     public List<CatEntity> getOwnerCats(int passportCode) {
-        OwnerEntity owner = new OwnerEntity();
-        List<OwnerEntity> owners = ownerRepository.findAll();
-        for (int i = 0; i < owners.size(); i++) {
-            if (owners.get(i).getPassportCode() == passportCode) {
-                owner = owners.get(i);
-            }
-        }
-        ArrayList<CatEntity> cats = new ArrayList<>();
-        catRepository.findAll().forEach(cats::add);
-        List<CatEntity> ownerCats = new ArrayList<>();
-        for (CatEntity cat : cats) {
-            if (cat.getPassportOwner() == owner.getPassportCode()) {
-                ownerCats.add(cat);
-            }
-        }
+        try {
+            List<CatEntity> cats = catRepository.findOwnerCats(passportCode);
 
-        return ownerCats;
+            return cats;
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public void deletePairFriends(FriendsEntity friends) {
-        friendsRepository.delete(friends);
+        try {
+            friendsRepository.delete(friends);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public boolean addPairFriend(FriendsEntity friends) {
-        var all = getAllFriends();
-        for (FriendsEntity value : all) {
-            if ((value.getSecond() == friends.getSecond()
-                    && value.getFirst() == friends.getFirst())
-                    || (value.getSecond() == friends.getFirst()
-                    && value.getFirst() == friends.getSecond())
-
-            ) {
-                return false;
+        try {
+            var all = getAllFriends();
+            for (FriendsEntity value : all) {
+                boolean firstFriend = (value.getSecond() == friends.getSecond() && value.getFirst() == friends.getFirst());
+                boolean secondFriend = (value.getSecond() == friends.getFirst() && value.getFirst() == friends.getSecond());
+                if (firstFriend || secondFriend) {
+                    return false;
+                }
             }
-        }
 
-        friendsRepository.save(friends);
-        return true;
+            friendsRepository.save(friends);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
     }
 
     public List<FriendsEntity> getAllFriends() {
-        List<FriendsEntity> friends = friendsRepository.findAll();
-        return friends;
+        try {
+            List<FriendsEntity> friends = friendsRepository.findAll();
+            return friends;
+        } catch (Exception e) {
+            throw new RuntimeException("Exception " + e.getMessage());
+        }
+    }
+
+    public List<CatView> convert(List<CatEntity> cats) {
+        List<CatView> catViews = new ArrayList<>();
+        for (int i = 0; i < cats.size(); i++) {
+            CatEntity cat = cats.get(i);
+            catViews.add(new CatView(cat.getDate(), cat.getBreed(), cat.getColor()));
+        }
+        return catViews;
+    }
+
+    public CatView convert(CatEntity cat) {
+        CatView catView = new CatView(cat.getDate(), cat.getBreed(), cat.getColor());
+        return catView;
     }
 }

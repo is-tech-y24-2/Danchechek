@@ -15,100 +15,69 @@ public class CatController {
     @Autowired
     private CatService catService;
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity getAllCats() {
-        try {
-            return ResponseEntity.badRequest().body(catService.getAllCats());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
-        }
+        return ResponseEntity.ok().body(catService.convert(catService.getAllCats()));
     }
 
-    @GetMapping("/bypassport")
+    @GetMapping()
     public ResponseEntity findByPassportCat(@RequestParam int passport) {
-        try {
-            if (catService.findByPassportCat(passport) != null) {
-                return ResponseEntity.badRequest().body(catService.findByPassportCat(passport));
-            } else {
-                return ResponseEntity.badRequest().body("нет такого пользователя");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (catService.findByPassportCat(passport) != null) {
+            return ResponseEntity.ok().body(catService.convert(catService.findByPassportCat(passport)));
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
     public ResponseEntity saveCat(@RequestBody CatEntity cat) {
-        try {
-            if (catService.saveCat(cat)) {
-                return ResponseEntity.badRequest().body(catService.findByPassportCat(cat.getPassportCode()));
-            } else {
-                return ResponseEntity.badRequest().body("нет такого пользователя");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (catService.saveCat(cat)) {
+            return ResponseEntity.ok().body(catService.convert(catService.findByPassportCat(cat.getPassportCode())));
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping
-    public ResponseEntity deleteCat(@RequestBody CatEntity cat) {
-        try {
-            catService.deleteCat(cat);
-            return ResponseEntity.badRequest().body("удалил)");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
-        }
+    public ResponseEntity deleteCat(@RequestParam int passportCode) {
+        catService.deleteCat(passportCode);
+        return ResponseEntity.ok().body("удалил)");
     }
 
     @GetMapping("/ownerscats")
     public ResponseEntity getOwnerCats(@RequestParam int passportCode) {
-        try {
-            if (catService.getOwnerCats(passportCode) != null) {
-                return ResponseEntity.badRequest().body(catService.getOwnerCats(passportCode));
-            } else {
-                return ResponseEntity.badRequest().body("Нет котов_");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (catService.getOwnerCats(passportCode) != null) {
+            return ResponseEntity.ok().body(catService.convert(catService.getOwnerCats(passportCode)));
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/friends")
     public ResponseEntity getFriendsCat(@RequestParam int passportCode) {
-        try {
-            if (catService.getFriendsCat(passportCode) != null) {
-                return ResponseEntity.badRequest().body(catService.getFriendsCat(passportCode));
-            } else {
-                return ResponseEntity.badRequest().body("Нет друзей");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (catService.getFriendsCat(passportCode) != null) {
+            return ResponseEntity.ok().body(catService.convert(catService.getFriendsCat(passportCode)));
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/addpair")
+    @PostMapping("/addpairfriend")
     public ResponseEntity addPairFriend(@RequestBody FriendsEntity friends) {
-        try {
-            if (catService.addPairFriend(friends) == true) {
-                return ResponseEntity.ok().body("добавили");
-            } else {
-                return ResponseEntity.ok().body("не добавили");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (catService.addPairFriend(friends)) {
+            return ResponseEntity.ok().body("добавили");
+        } else {
+            return ResponseEntity.notFound().build();
         }
+
     }
 
     @GetMapping("/allfriends")
     public ResponseEntity getAllFriends() {
-        try {
-            if (catService.getAllFriends() != null) {
-                return ResponseEntity.ok().body(catService.getAllFriends());
-            } else {
-                return ResponseEntity.ok().body("нет пар");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (catService.getAllFriends() != null) {
+            return ResponseEntity.ok().body(catService.getAllFriends());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

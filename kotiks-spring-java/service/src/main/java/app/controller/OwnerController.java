@@ -16,42 +16,26 @@ public class OwnerController {
 
     @PostMapping
     public ResponseEntity saveOwner(@RequestBody OwnerEntity owner) {
-        try {
-            ownerService.saveOwner(owner);
-            return ResponseEntity.badRequest().body(ownerService.findByPassportOwner(owner.getPassportCode()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
-        }
+        ownerService.saveOwner(owner);
+        return ResponseEntity.ok().body(ownerService.convert(ownerService.findByPassportOwner(owner.getPassportCode())));
     }
 
     @DeleteMapping
-    public ResponseEntity deleteOwner(@RequestBody OwnerEntity owner) {
-        try {
-            ownerService.deleteOwner(owner);
-            return ResponseEntity.ok().body("Удалил)");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неуспешная группа");
-        }
+    public ResponseEntity deleteOwner(@RequestParam int passportCode) {
+        ownerService.deleteOwner(passportCode);
+        return ResponseEntity.ok().body("Удалил)");
     }
 
     @GetMapping
     public ResponseEntity findByPassportOwner(@RequestParam int passport) {
-        try {
-            return ResponseEntity.ok().body(ownerService.findByPassportOwner(passport));
-        } catch (Exception e) {
-            if (ownerService.findByPassportOwner(passport) == null) {
-                return ResponseEntity.badRequest().body("null");
-            }
-            return ResponseEntity.badRequest().body("Неуспешная группа");
+        if (ownerService.findByPassportOwner(passport) == null) {
+            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok().body(ownerService.convert(ownerService.findByPassportOwner(passport)));
     }
 
     @GetMapping("/all")
-    public ResponseEntity getUsers() {
-        try {
-            return ResponseEntity.badRequest().body(ownerService.getAllOwners());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Bad");
-        }
+    public ResponseEntity getOwners() {
+        return ResponseEntity.ok().body(ownerService.convert(ownerService.getAllOwners()));
     }
 }

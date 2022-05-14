@@ -10,7 +10,11 @@ public interface OwnerService {
 
     List<OwnerEntity> getAllOwners();
 
-    void deleteOwner(OwnerEntity owner);
+    void deleteOwner(int passportCode);
 
     OwnerEntity findByPassportOwner(int passport);
+
+    List<OwnerView> convert(List<OwnerEntity> owners);
+
+    OwnerView convert(OwnerEntity owner);
 }

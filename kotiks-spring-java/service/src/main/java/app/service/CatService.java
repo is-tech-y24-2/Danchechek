@@ -14,7 +14,7 @@ public interface CatService {
 
     CatEntity findByPassportCat(int passport);
 
-    void deleteCat(CatEntity cat);
+    void deleteCat(int passportCode);
 
     ArrayList<CatEntity> getFriendsCat(int passportCode);
 
@@ -25,4 +25,8 @@ public interface CatService {
     boolean addPairFriend(FriendsEntity friends);
 
     List<FriendsEntity> getAllFriends();
+
+    List<CatView> convert(List<CatEntity> cats);
+
+    CatView convert(CatEntity cat);
 }
