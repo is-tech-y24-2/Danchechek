@@ -24,7 +24,6 @@ public class OwnerController {
         UserDetails user = User.builder()
                 .username("annasmith")
                 .password(owner.getPassword())
-//                .roles(USER.name())
                 .authorities(USER.getGrantedAuthorities())
                 .build();
         ownerService.saveOwner(owner);

@@ -99,15 +99,6 @@ public class CatServiceImpl implements CatService{
 
     public boolean addPairFriend(FriendsEntity friends) {
         try {
-            var all = getAllFriends();
-            for (FriendsEntity value : all) {
-                boolean firstFriend = (value.getSecond() == friends.getSecond() && value.getFirst() == friends.getFirst());
-                boolean secondFriend = (value.getSecond() == friends.getFirst() && value.getFirst() == friends.getSecond());
-                if (firstFriend || secondFriend) {
-                    return false;
-                }
-            }
-
             friendsRepository.save(friends);
             return true;
         } catch (Exception e) {
